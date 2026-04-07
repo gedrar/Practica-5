@@ -1,44 +1,71 @@
+#include <Arduino.h>
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
-#define SCREEN_WIDTH 128 // Amplada de la pantalla OLED [cite: 430]
-#define SCREEN_HEIGHT 64 // Alçada de la pantalla (Posa-ho a 32 si la teva és més estreta i es veu estrany) [cite: 430]
+#define SCREEN_WIDTH 128 
+#define SCREEN_HEIGHT 64 
 
-#define OLED_RESET    -1 // Pin de reset (no s'utilitza, per això posem -1) [cite: 435]
-#define SCREEN_ADDRESS 0x3C // L'adreça I2C que ha trobat l'escàner 
+#define OLED_RESET    -1 
+#define SCREEN_ADDRESS 0x3C 
 
-// Creem l'objecte de la pantalla [cite: 437]
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+
+// Funció auxiliar per dibuixar la cara somrient
+void drawSmiley(bool wink) {
+  display.clearDisplay(); // Neteja la pantalla
+
+  // Dibuixem el cap (un cercle gran)
+  display.drawCircle(64, 32, 30, SSD1306_WHITE); 
+
+  // Ull esquerre (sempre obert)
+  display.fillCircle(50, 22, 4, SSD1306_WHITE);
+
+  // Ull dret (obert o picant l'ullet)
+  if (wink) {
+    // Si pica l'ullet, dibuixem una línia horitzontal
+    display.drawLine(72, 22, 84, 22, SSD1306_WHITE); 
+  } else {
+    // Si està obert, un altre cercle
+    display.fillCircle(78, 22, 4, SSD1306_WHITE); 
+  }
+
+  // Somriure (fet amb 3 línies)
+  display.drawLine(50, 46, 78, 46, SSD1306_WHITE); // Base del somriure
+  display.drawLine(50, 46, 42, 38, SSD1306_WHITE); // Comissura esquerra
+  display.drawLine(78, 46, 86, 38, SSD1306_WHITE); // Comissura dreta
+
+  display.display(); // Obligatori per mostrar els canvis
+}
 
 void setup() {
   Serial.begin(115200);
+  
+  // ESPEREM 3 SEGONS! Així tens temps d'obrir el monitor sèrie (icona de l'endoll)
+  delay(3000); 
 
-  // Inicialitzem la pantalla [cite: 464]
   if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
     Serial.println(F("Error: No s'ha trobat la pantalla OLED"));
-    for(;;); // Si falla, ens quedem en un bucle infinit [cite: 467]
+    for(;;); 
   }
 
-  Serial.println("Pantalla inicialitzada correctament!"); // Missatge de depuració per al Monitor Sèrie
-
-  // Netejem la memòria intermèdia de la pantalla [cite: 472]
-  display.clearDisplay();
-
-  // Configurem l'estil del text [cite: 658, 672, 673]
-  display.setTextSize(1);             
-  display.setTextColor(SSD1306_WHITE); 
-  display.setCursor(0, 10);           
-
-  // Escrivim el missatge [cite: 675]
-  display.println(F("Hola!"));
-  display.println(F("Practica 5 complida"));
-  display.println(F("I2C funciona perfecte"));
-
-  // L'ordre display() és obligatòria per enviar el que hem dibuixat a la pantalla física [cite: 475, 476]
-  display.display();
+  Serial.println("Pantalla inicialitzada correctament! Preparant l'animacio..."); 
 }
 
 void loop() {
-  // Ho deixem buit perquè volem el text fix
-}
+  // --- 1. ANIMACIÓ DEL TEXT "GO JORDI!" ---
+  display.setTextSize(3); // Mida de text enorme (cobreix gairebé mitja pantalla)
+  display.setTextColor(SSD1306_WHITE); // Text blanc
+  
+  // Fem un bucle des del marge dret (128) fins a fora pel marge esquerre (-180)
+  for (int x = SCREEN_WIDTH; x > -180; x -= 4) {
+    display.clearDisplay(); // Neteja el fotograma anterior
+    display.setCursor(x, 20); // Canviem la posició X a cada pas
+    display.print("GO JORDI!");
+    display.display(); // Dibuixa el fotograma
+    delay(10); // Pausa petita per controlar la velocitat
+  }
+
+  // --- 2. ANIMACIÓ DE LA CARA ---
+  drawSmiley(false); // Mostrem la cara normal
+  delay(1000);       // S'hi està 1 segon
