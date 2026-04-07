@@ -57,6 +57,7 @@ void loop() {
   display.setTextSize(3); // Mida de text enorme (cobreix gairebé mitja pantalla)
   display.setTextColor(SSD1306_WHITE); // Text blanc
   
+  display.setTextWrap(false);
   // Fem un bucle des del marge dret (128) fins a fora pel marge esquerre (-180)
   for (int x = SCREEN_WIDTH; x > -180; x -= 4) {
     display.clearDisplay(); // Neteja el fotograma anterior
