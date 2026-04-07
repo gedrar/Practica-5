@@ -53,7 +53,7 @@ void setup() {
 }
 
 void loop() {
-  // --- 1. ANIMACIÓ DEL TEXT "GO JORDI!" ---
+  // --- 1. ANIMACIÓ DEL TEXT "ENHORABONA!" ---
   display.setTextSize(3); // Mida de text enorme (cobreix gairebé mitja pantalla)
   display.setTextColor(SSD1306_WHITE); // Text blanc
   
@@ -61,7 +61,7 @@ void loop() {
   for (int x = SCREEN_WIDTH; x > -180; x -= 4) {
     display.clearDisplay(); // Neteja el fotograma anterior
     display.setCursor(x, 20); // Canviem la posició X a cada pas
-    display.print("GO JORDI!");
+    display.print("ENHORABONA!");
     display.display(); // Dibuixa el fotograma
     delay(10); // Pausa petita per controlar la velocitat
   }
