@@ -69,3 +69,4 @@ void loop() {
   // --- 2. ANIMACIÓ DE LA CARA ---
   drawSmiley(false); // Mostrem la cara normal
   delay(1000);       // S'hi està 1 segon
+}
