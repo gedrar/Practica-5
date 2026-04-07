@@ -1,0 +1,44 @@
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+#define SCREEN_WIDTH 128 // Amplada de la pantalla OLED [cite: 430]
+#define SCREEN_HEIGHT 64 // Alçada de la pantalla (Posa-ho a 32 si la teva és més estreta i es veu estrany) [cite: 430]
+
+#define OLED_RESET    -1 // Pin de reset (no s'utilitza, per això posem -1) [cite: 435]
+#define SCREEN_ADDRESS 0x3C // L'adreça I2C que ha trobat l'escàner 
+
+// Creem l'objecte de la pantalla [cite: 437]
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+
+void setup() {
+  Serial.begin(115200);
+
+  // Inicialitzem la pantalla [cite: 464]
+  if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
+    Serial.println(F("Error: No s'ha trobat la pantalla OLED"));
+    for(;;); // Si falla, ens quedem en un bucle infinit [cite: 467]
+  }
+
+  Serial.println("Pantalla inicialitzada correctament!"); // Missatge de depuració per al Monitor Sèrie
+
+  // Netejem la memòria intermèdia de la pantalla [cite: 472]
+  display.clearDisplay();
+
+  // Configurem l'estil del text [cite: 658, 672, 673]
+  display.setTextSize(1);             
+  display.setTextColor(SSD1306_WHITE); 
+  display.setCursor(0, 10);           
+
+  // Escrivim el missatge [cite: 675]
+  display.println(F("Hola!"));
+  display.println(F("Practica 5 complida"));
+  display.println(F("I2C funciona perfecte"));
+
+  // L'ordre display() és obligatòria per enviar el que hem dibuixat a la pantalla física [cite: 475, 476]
+  display.display();
+}
+
+void loop() {
+  // Ho deixem buit perquè volem el text fix
+}
